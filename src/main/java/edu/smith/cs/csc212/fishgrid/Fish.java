@@ -18,8 +18,15 @@ public class Fish extends WorldObject {
 	static Color[] COLORS = {
 			Color.red,
 			Color.green,
-			Color.yellow
-			// TODO: (lab) Add more colors.
+			Color.yellow,
+			Color.orange,
+			Color.blue,
+			Color.cyan,
+			Color.darkGray,
+			Color.lightGray,
+			Color.magenta,
+			Color.pink,
+			Color.white
 			// TODO: (FishGrid) Maybe make a special fish that is more points?
 	};
 	/**
