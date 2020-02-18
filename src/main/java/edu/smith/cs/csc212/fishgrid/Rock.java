@@ -17,7 +17,7 @@ public class Rock extends WorldObject {
 	 * https://en.wikipedia.org/wiki/Shades_of_gray#Cool_grays
 	 * https://en.wikipedia.org/wiki/Shades_of_gray#Warm_grays
 	 */
-	private static Color[] ROCK_COLORS = new Color[] { new Color(144, 144, 192), new Color(145, 163, 176),
+	public static Color[] ROCK_COLORS = new Color[] { new Color(144, 144, 192), new Color(145, 163, 176),
 			new Color(112, 128, 144), new Color(94, 113, 106), new Color(76, 88, 102), new Color(170, 152, 169),
 			new Color(152, 129, 123), new Color(138, 129, 141), new Color(72, 60, 50) };
 

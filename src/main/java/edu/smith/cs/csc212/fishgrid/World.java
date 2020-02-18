@@ -152,7 +152,7 @@ public class World {
 	 * @return the Rock.
 	 */
 	public Rock insertRockRandomly() {
-		Rock r = new Rock(this);
+		Rock r = new FallingRock(this);
 		insertRandomly(r);
 		return r;
 	}

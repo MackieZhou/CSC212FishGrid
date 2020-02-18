@@ -155,10 +155,18 @@ public class FishGame {
 	private void wanderMissingFish() {
 		Random rand = ThreadLocalRandom.current();
 		for (Fish lost : missing) {
-			// 30% of the time, lost fish move randomly.
-			if (rand.nextDouble() < 0.3) {
-				lost.moveRandomly();
+			if (lost.fastscared==true) {
+				// 80% of the time, fastscared lost fish move randomly.
+				if (rand.nextDouble() < 0.8) {
+					lost.moveRandomly();
+				}
+			} else {
+				// 30% of the time, non-fastscared lost fish move randomly.
+				if (rand.nextDouble() < 0.3) {
+					lost.moveRandomly();
+				}
 			}
+			
 		}
 	}
 

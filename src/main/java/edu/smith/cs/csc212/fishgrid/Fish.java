@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.Ellipse2D;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Most Fish behavior lives up in WorldObject (a Fish just looks special!).
@@ -39,6 +41,12 @@ public class Fish extends WorldObject {
 	boolean player = false;
 	
 	/**
+	 * There is a 50% possibility that the fish is fastscared
+	 */
+	boolean fastscared;
+	double fast;
+	
+	/**
 	 * Called only on the Fish that is the player!
 	 */
 	public void markAsPlayer() {
@@ -54,6 +62,16 @@ public class Fish extends WorldObject {
 	public Fish(int color, World world) {
 		super(world);
 		this.color = color;
+		
+		// is this fish fastscared or not?
+		Random rand = ThreadLocalRandom.current();
+		fast = rand.nextDouble();
+		if (fast<0.5) {
+			this.fastscared = true;
+		} else {
+			this.fastscared = false;
+		}
+		
 	}
 	
 	/**
@@ -116,4 +134,5 @@ public class Fish extends WorldObject {
 	public void step() {
 		// Fish are controlled at a higher level; see FishGame.
 	}
+	
 }

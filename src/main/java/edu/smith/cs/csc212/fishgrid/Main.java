@@ -19,7 +19,7 @@ public class Main extends GFX {
 	/**
 	 * Game size (visual). Try changing this to 600.
 	 */
-	public static int VISUAL_GRID_SIZE = 500;
+	public static int VISUAL_GRID_SIZE = 550;
 	/**
 	 * Game size (logical). Try changing this to 15 or so.
 	 */
