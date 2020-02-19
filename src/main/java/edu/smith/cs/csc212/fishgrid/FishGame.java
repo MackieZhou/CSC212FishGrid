@@ -43,7 +43,7 @@ public class FishGame {
 	 * Score!
 	 */
 	int score;
-	
+
 	/**
 	 * the number of rock we will generate
 	 */
@@ -129,7 +129,7 @@ public class FishGame {
 				// (Cast our WorldObject to a Fish)
 				// Convince Java it's a Fish (we know it is!)
 				Fish justFound = (Fish) wo;
-				
+
 				// Add to found list.
 				found.add(justFound);
 
@@ -137,7 +137,13 @@ public class FishGame {
 				missing.remove(justFound);
 
 				// Increase score when you find a fish!
-				score += 10;
+				if (justFound.color == 0 || justFound.color == 8) {
+					// red and magenta fish worth 25 points! Wow!
+					score += 25;
+				} else {
+					// fish of other colors worth only 10 points...
+					score += 10;
+				}
 			}
 		}
 
@@ -155,7 +161,7 @@ public class FishGame {
 	private void wanderMissingFish() {
 		Random rand = ThreadLocalRandom.current();
 		for (Fish lost : missing) {
-			if (lost.fastscared==true) {
+			if (lost.fastscared == true) {
 				// 80% of the time, fastscared lost fish move randomly.
 				if (rand.nextDouble() < 0.8) {
 					lost.moveRandomly();
@@ -166,7 +172,7 @@ public class FishGame {
 					lost.moveRandomly();
 				}
 			}
-			
+
 		}
 	}
 
@@ -178,10 +184,14 @@ public class FishGame {
 	 * @param y - the y-tile.
 	 */
 	public void click(int x, int y) {
-		// TODO(FishGrid) use this print to debug your World.canSwim changes!
+		// use this print to debug your World.canSwim changes!
 		System.out.println("Clicked on: " + x + "," + y + " world.canSwim(player,...)=" + world.canSwim(player, x, y));
 		List<WorldObject> atPoint = world.find(x, y);
-		// TODO(FishGrid) allow the user to click and remove rocks.
+		for (int i = 0; i < atPoint.size(); i++) {
+			if (atPoint.get(i) instanceof Rock) {
+				atPoint.get(i).remove();
+			}
+		}
 
 	}
 

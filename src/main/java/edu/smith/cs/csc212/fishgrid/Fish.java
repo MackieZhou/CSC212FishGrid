@@ -8,8 +8,8 @@ import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
- * Most Fish behavior lives up in WorldObject (a Fish just looks special!).
- * Or it is in Main, where the missing/found and player fish all act different!
+ * Most Fish behavior lives up in WorldObject (a Fish just looks special!). Or
+ * it is in Main, where the missing/found and player fish all act different!
  * 
  * @author jfoley
  */
@@ -18,18 +18,17 @@ public class Fish extends WorldObject {
 	 * A fish is only special because of its color now!
 	 */
 	static Color[] COLORS = {
-			Color.red,
-			Color.green,
-			Color.yellow,
-			Color.orange,
-			Color.blue,
-			Color.cyan,
-			Color.darkGray,
-			Color.lightGray,
-			Color.magenta,
-			Color.pink,
-			Color.white
-			// TODO: (FishGrid) Maybe make a special fish that is more points?
+			Color.red, //0
+			Color.green, //1
+			Color.yellow, //2
+			Color.orange, //3
+			Color.blue, //4
+			Color.cyan, //5
+			Color.darkGray, //6
+			Color.lightGray, //7
+			Color.magenta, //8
+			Color.pink, //9
+			Color.white //10
 	};
 	/**
 	 * This is an index into the {@link #COLORS} array.
