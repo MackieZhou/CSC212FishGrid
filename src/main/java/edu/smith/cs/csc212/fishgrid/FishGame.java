@@ -35,6 +35,11 @@ public class FishGame {
 	List<Fish> found;
 
 	/**
+	 * these are fish we've brought home
+	 */
+	List<Fish> homeFish;
+
+	/**
 	 * Number of steps!
 	 */
 	int stepsTaken;
@@ -47,7 +52,7 @@ public class FishGame {
 	/**
 	 * the number of rock we will generate
 	 */
-	public static final int NUM_ROCKS = 10;
+	public static final int NUM_ROCKS = 25;
 
 	/**
 	 * Create a FishGame of a particular size.
@@ -63,6 +68,7 @@ public class FishGame {
 
 		// Add a home!
 		home = world.insertFishHome();
+		homeFish = new ArrayList<Fish>();
 
 		// Add rocks
 		for (int i = 0; i < NUM_ROCKS; i++) {
@@ -89,8 +95,6 @@ public class FishGame {
 	}
 
 	/**
-	 * How we tell if the game is over: if missingFishLeft() == 0.
-	 * 
 	 * @return the size of the missing list.
 	 */
 	public int missingFishLeft() {
@@ -103,8 +107,7 @@ public class FishGame {
 	 * @return true if the player has won (or maybe lost?).
 	 */
 	public boolean gameOver() {
-		// TODO(FishGrid) We want to bring the fish home before we win!
-		return missing.isEmpty();
+		return homeFish.size() == Fish.COLORS.length - 1;
 	}
 
 	/**
@@ -149,8 +152,41 @@ public class FishGame {
 
 		// Make sure missing fish *do* something.
 		wanderMissingFish();
+
+		// When the player is at home, remove followers
+		if (this.player.inSameSpot(this.home)) {
+			goHome();
+		}
+
+		// if the a fish that is not the player wander home accidentally...
+		// get all the objects that are at home
+		List<WorldObject> thingsAtHome = this.home.findSameCell();
+		// remove the player fish if it's in the list
+		thingsAtHome.remove(this.player);
+		for (WorldObject wo : thingsAtHome) {
+			if (wo.isFish() && !(wo.isPlayer())) {
+				// Fish that wander home by accident is marked at home
+				homeFish.add((Fish) wo);
+				// remove the fish from the missing list as well as the world
+				wo.remove();
+				this.missing.remove(wo);
+			}
+		}
+
+		// after following a certain number of steps, fish found by the player gets tired
+		int stepTillTired = 15;
+		List<Fish> copyFound = this.found;
+		for (int i = 0; i < copyFound.size(); i++) {
+			copyFound.get(i).followStep++;
+			if (i >= 1) {
+				// only the fish whose index in the found list is bigger than 1 stops following
+				lostAgain(copyFound.get(i), stepTillTired);
+			}
+		}
+
 		// When fish get added to "found" they will follow the player around.
 		World.objectsFollow(player, found);
+
 		// Step any world-objects that run themselves.
 		world.stepAll();
 	}
@@ -185,14 +221,35 @@ public class FishGame {
 	 */
 	public void click(int x, int y) {
 		// use this print to debug your World.canSwim changes!
-		System.out.println("Clicked on: " + x + "," + y + " world.canSwim(player,...)=" + world.canSwim(player, x, y));
+//		System.out.println("Clicked on: " + x + "," + y + " world.canSwim(player,...)=" + world.canSwim(player, x, y));
 		List<WorldObject> atPoint = world.find(x, y);
 		for (int i = 0; i < atPoint.size(); i++) {
 			if (atPoint.get(i) instanceof Rock) {
 				atPoint.get(i).remove();
 			}
 		}
+	}
 
+	public void goHome() {
+		// take all fish found by the player home
+		homeFish.addAll(found);
+		// remove the fish from the world
+		for (Fish fish : found) {
+			fish.remove();
+		}
+		// reset the found list
+		found.removeAll(found);
+	}
+
+	// Sweet has following the player fish for so long!!
+	// Sweet decides to stop following the player
+	public void lostAgain(Fish Sweet, int steps) {
+		if (Sweet.followStep > steps) {
+			this.missing.add(Sweet);
+			this.found.remove(Sweet);
+			// stop following and reset followStep to 0
+			Sweet.followStep = 0;
+		}
 	}
 
 }

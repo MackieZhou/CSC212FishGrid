@@ -228,13 +228,15 @@ public class World {
 			// other fish.
 			if (it instanceof Snail) {
 				// This if-statement doesn't let anyone step on the Snail.
-				// The Snail(s) are not gonna take it.
 				return false;
-			} else if (!(isPlayer)) {
-				if (it instanceof Fish || it instanceof Rock) {
-					// if a fish is not the player, it cannot step on a fish/rock
-					return false;
-				}
+				
+			} else if (it instanceof Rock) {
+				// no one can step on a rock
+				return false;
+
+			} else if (!(isPlayer) && (it instanceof Fish)) {
+				// fish that is not the player cannot step on other fish
+				return false;
 			}
 		}
 

@@ -34,6 +34,12 @@ public class Fish extends WorldObject {
 	 * This is an index into the {@link #COLORS} array.
 	 */
 	int color;
+	
+	/**
+	 * how many step have you followed the player fish?
+	 */
+	public int followStep;
+	
 	/**
 	 * Whether or not this is the player;
 	 */
@@ -61,6 +67,7 @@ public class Fish extends WorldObject {
 	public Fish(int color, World world) {
 		super(world);
 		this.color = color;
+		this.followStep = 0;
 		
 		// is this fish fastscared or not?
 		Random rand = ThreadLocalRandom.current();
