@@ -40,11 +40,6 @@ public class FishGame {
 	List<Fish> homeFish;
 
 	/**
-	 * these are all the hearts in the game
-	 */
-	List<Heart> allHearts;
-
-	/**
 	 * Number of steps!
 	 */
 	int stepsTaken;
@@ -82,7 +77,6 @@ public class FishGame {
 
 		// when do the hearts appear?
 		this.heartTime = 1;
-		this.allHearts = new ArrayList<Heart>();
 
 		// Add rocks
 		for (int i = 0; i < NUM_ROCKS; i++) {
@@ -169,27 +163,14 @@ public class FishGame {
 					// fish of other colors worth only 10 points...
 					score += 10;
 				}
+
+			} else if (wo.isHeart()) {
+				// If we find a Heart, remove it from allHearts
+				wo.remove();
+				// Hearts found by the player worths 25 points
+				score += 25;
 			}
 		}
-		
-////		(int i = 0; i < copyHearts.size(); i++)
-//		List<Heart> copyHearts = this.allHearts;
-//		for (Heart h : copyHearts) {
-//			List<WorldObject> thingsOnHeart = h.findSameCell();
-//			for (WorldObject wo : thingsOnHeart) {
-//				if (wo.isFish()) {
-//					h.remove();
-//					this.allHearts.remove(h);
-////					if (wo.isPlayer()) {
-////						score += 25;
-////					}
-//					System.out.println("1 ????");
-//				}
-//				System.out.println("2  ????");
-//			}
-//			System.out.println("3  ????");
-//		}
-//		System.out.println("4 ????");
 
 		// Make sure missing fish *do* something.
 		wanderMissingFish();
@@ -223,6 +204,15 @@ public class FishGame {
 			if (i >= 1) {
 				// only the fish whose index in the found list is bigger than 1 stops following
 				lostAgain(copyFound.get(i), stepTillTired);
+			}
+		}
+
+		for (Fish f : this.missing) {
+			List<WorldObject> underFish = f.findSameCell();
+			for (WorldObject wo : underFish) {
+				if (wo.isHeart()) {
+					wo.remove();
+				}
 			}
 		}
 
@@ -313,7 +303,6 @@ public class FishGame {
 		// Add hearts randomly
 		for (int i = 0; i < howMany; i++) {
 			Heart h = new Heart(this.world);
-			this.allHearts.add(h);
 			world.insertRandomly(h);
 		}
 	}
