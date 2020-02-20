@@ -40,6 +40,11 @@ public class FishGame {
 	List<Fish> homeFish;
 
 	/**
+	 * these are all the hearts in the game
+	 */
+	List<Heart> allHearts;
+
+	/**
 	 * Number of steps!
 	 */
 	int stepsTaken;
@@ -50,9 +55,14 @@ public class FishGame {
 	int score;
 
 	/**
+	 * At random intervals, hearts will appear somewhere on the board.
+	 */
+	int heartTime;
+
+	/**
 	 * the number of rock we will generate
 	 */
-	public static final int NUM_ROCKS = 25;
+	public static final int NUM_ROCKS = 10;
 
 	/**
 	 * Create a FishGame of a particular size.
@@ -69,6 +79,10 @@ public class FishGame {
 		// Add a home!
 		home = world.insertFishHome();
 		homeFish = new ArrayList<Fish>();
+
+		// when do the hearts appear?
+		this.heartTime = 1;
+		this.allHearts = new ArrayList<Heart>();
 
 		// Add rocks
 		for (int i = 0; i < NUM_ROCKS; i++) {
@@ -117,6 +131,14 @@ public class FishGame {
 		// Keep track of how long the game has run.
 		this.stepsTaken += 1;
 
+		// make the hearts appear at random intervals
+		if (this.stepsTaken == heartTime) {
+			// calculate the new interval/heartTime
+			calcHeartTime();
+			// here come the hearts!
+			insertHeart();
+		}
+
 		// These are all the objects in the world in the same cell as the player.
 		List<WorldObject> overlap = this.player.findSameCell();
 		// The player is there, too, let's skip them.
@@ -149,6 +171,25 @@ public class FishGame {
 				}
 			}
 		}
+		
+////		(int i = 0; i < copyHearts.size(); i++)
+//		List<Heart> copyHearts = this.allHearts;
+//		for (Heart h : copyHearts) {
+//			List<WorldObject> thingsOnHeart = h.findSameCell();
+//			for (WorldObject wo : thingsOnHeart) {
+//				if (wo.isFish()) {
+//					h.remove();
+//					this.allHearts.remove(h);
+////					if (wo.isPlayer()) {
+////						score += 25;
+////					}
+//					System.out.println("1 ????");
+//				}
+//				System.out.println("2  ????");
+//			}
+//			System.out.println("3  ????");
+//		}
+//		System.out.println("4 ????");
 
 		// Make sure missing fish *do* something.
 		wanderMissingFish();
@@ -173,7 +214,8 @@ public class FishGame {
 			}
 		}
 
-		// after following a certain number of steps, fish found by the player gets tired
+		// after following a certain number of steps, fish found by the player gets
+		// tired
 		int stepTillTired = 15;
 		List<Fish> copyFound = this.found;
 		for (int i = 0; i < copyFound.size(); i++) {
@@ -249,6 +291,30 @@ public class FishGame {
 			this.found.remove(Sweet);
 			// stop following and reset followStep to 0
 			Sweet.followStep = 0;
+		}
+	}
+
+	/**
+	 * calculate the random interval for generating hearts
+	 */
+	public void calcHeartTime() {
+		Random rand = ThreadLocalRandom.current();
+		int interval = rand.nextInt(15) + 15;
+		this.heartTime += interval;
+	}
+
+	/**
+	 * insert random number of hearts
+	 */
+	public void insertHeart() {
+		Random rand = ThreadLocalRandom.current();
+		int howMany = rand.nextInt(5) + 5;
+
+		// Add hearts randomly
+		for (int i = 0; i < howMany; i++) {
+			Heart h = new Heart(this.world);
+			this.allHearts.add(h);
+			world.insertRandomly(h);
 		}
 	}
 

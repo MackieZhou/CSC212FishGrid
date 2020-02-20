@@ -5,7 +5,9 @@ import java.awt.Graphics2D;
 import java.awt.Polygon;
 
 /**
- * This class represents a FishHome. Someday our game will require us to return missing fish to this WorldObject.
+ * This class represents a FishHome. Someday our game will require us to return
+ * missing fish to this WorldObject.
+ * 
  * @author jfoley
  *
  */
@@ -19,16 +21,16 @@ public class FishHome extends WorldObject {
 	 * For graphically drawing the house.
 	 */
 	final Polygon house;
-	
+
 	public FishHome(World world) {
 		super(world);
-		
+
 		// I drew this out on graph paper.
 		roof = new Polygon();
 		roof.addPoint(1, 4);
 		roof.addPoint(9, 4);
 		roof.addPoint(5, 1);
-		
+
 		house = new Polygon();
 		house.addPoint(2, 4);
 		house.addPoint(2, 9);
@@ -40,13 +42,11 @@ public class FishHome extends WorldObject {
 		house.addPoint(8, 9);
 		house.addPoint(8, 4);
 	}
-	
-
 
 	@Override
 	public void draw(Graphics2D g) {
 		Graphics2D scale = (Graphics2D) g.create();
-		scale.scale(1.0/10.0, 1.0/10.0);
+		scale.scale(1.0 / 10.0, 1.0 / 10.0);
 		scale.translate(-5, -5);
 		scale.setColor(Color.black);
 		scale.fillPolygon(roof);

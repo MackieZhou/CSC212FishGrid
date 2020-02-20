@@ -24,7 +24,7 @@ public class Main extends GFX {
 	/**
 	 * Game size (logical). Try changing this to 15 or so.
 	 */
-	public static int LOGICAL_GRID_SIZE = 15;
+	public static int LOGICAL_GRID_SIZE = 12;
 	/**
 	 * The words appear in the top part of the screen.
 	 */
