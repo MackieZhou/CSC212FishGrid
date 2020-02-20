@@ -57,7 +57,12 @@ public class FishGame {
 	/**
 	 * the number of rock we will generate
 	 */
-	public static final int NUM_ROCKS = 10;
+	public static final int NUM_ROCKS = 25;
+
+	/**
+	 * the number of snail we will generate
+	 */
+	public static final int NUM_SNAILS = 2;
 
 	/**
 	 * Create a FishGame of a particular size.
@@ -84,7 +89,7 @@ public class FishGame {
 		}
 
 		// Make the snail!
-		for (int i = 0; i < 2; i++) {
+		for (int i = 0; i < NUM_SNAILS; i++) {
 			world.insertSnailRandomly();
 		}
 
@@ -167,31 +172,35 @@ public class FishGame {
 			} else if (wo.isHeart()) {
 				// If we find a Heart, remove it from allHearts
 				wo.remove();
-				// Hearts found by the player worths 25 points
-				score += 25;
+				// Hearts found by the player worths 10 points
+				score += 10;
 			}
 		}
 
 		// Make sure missing fish *do* something.
 		wanderMissingFish();
 
-		// When the player is at home, remove followers
-		if (this.player.inSameSpot(this.home)) {
-			goHome();
-		}
-
-		// if the a fish that is not the player wander home accidentally...
-		// get all the objects that are at home
+		// if the a missing fish that wanders home accidentally...
 		List<WorldObject> thingsAtHome = this.home.findSameCell();
 		// remove the player fish if it's in the list
 		thingsAtHome.remove(this.player);
 		for (WorldObject wo : thingsAtHome) {
-			if (wo.isFish() && !(wo.isPlayer())) {
+			if (wo.isFish() && !(wo.isPlayer()) && this.missing.contains(wo)) {
 				// Fish that wander home by accident is marked at home
 				homeFish.add((Fish) wo);
 				// remove the fish from the missing list as well as the world
 				wo.remove();
 				this.missing.remove(wo);
+			}
+		}
+
+		// hearts found by a missing fish worth no point
+		for (Fish f : this.missing) {
+			List<WorldObject> underFish = f.findSameCell();
+			for (WorldObject wo : underFish) {
+				if (wo.isHeart()) {
+					wo.remove();
+				}
 			}
 		}
 
@@ -207,15 +216,10 @@ public class FishGame {
 			}
 		}
 
-		for (Fish f : this.missing) {
-			List<WorldObject> underFish = f.findSameCell();
-			for (WorldObject wo : underFish) {
-				if (wo.isHeart()) {
-					wo.remove();
-				}
-			}
+		// When the player is at home, remove followers
+		if (this.player.inSameSpot(this.home)) {
+			goHome();
 		}
-
 		// When fish get added to "found" they will follow the player around.
 		World.objectsFollow(player, found);
 
@@ -253,7 +257,6 @@ public class FishGame {
 	 */
 	public void click(int x, int y) {
 		// use this print to debug your World.canSwim changes!
-//		System.out.println("Clicked on: " + x + "," + y + " world.canSwim(player,...)=" + world.canSwim(player, x, y));
 		List<WorldObject> atPoint = world.find(x, y);
 		for (int i = 0; i < atPoint.size(); i++) {
 			if (atPoint.get(i) instanceof Rock) {
@@ -281,6 +284,15 @@ public class FishGame {
 			this.found.remove(Sweet);
 			// stop following and reset followStep to 0
 			Sweet.followStep = 0;
+
+			// you loose points when a fish stops following
+			if (Sweet.color == 0 || Sweet.color == 8) {
+				// red and magenta fish worth 25 points! Wow!
+				score -= 25;
+			} else {
+				// fish of other colors worth only 10 points...
+				score -= 10;
+			}
 		}
 	}
 
@@ -298,7 +310,7 @@ public class FishGame {
 	 */
 	public void insertHeart() {
 		Random rand = ThreadLocalRandom.current();
-		int howMany = rand.nextInt(5) + 5;
+		int howMany = rand.nextInt(3) + 2;
 
 		// Add hearts randomly
 		for (int i = 0; i < howMany; i++) {

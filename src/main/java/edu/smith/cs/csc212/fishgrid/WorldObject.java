@@ -123,6 +123,11 @@ public abstract class WorldObject {
 		return this instanceof Fish;
 	}
 
+	/**
+	 * Is this a Heart?
+	 * 
+	 * @return true if this is a Heart.
+	 */
 	public boolean isHeart() {
 		return this instanceof Heart;
 	}
